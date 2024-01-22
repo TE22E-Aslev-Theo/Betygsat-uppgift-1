@@ -11,6 +11,8 @@ public class GamePanel extends JPanel implements Runnable{
     final double player_Height = 35;
     public double gravity = 0.4;
     public double velocity; 
+    public int backgroundx = 0;
+    public int backgroundx2 = 1066;
     Thread GameThread;
     GamePanel(){
         Keys keylistener = new Keys();
@@ -28,8 +30,13 @@ public class GamePanel extends JPanel implements Runnable{
     public void paint(Graphics g){
         super.paint(g);
         Image player = new ImageIcon("Flappy birb.png").getImage();
+        Image background = new ImageIcon("spelbakgrund.jpg").getImage();
         Graphics2D g2d = (Graphics2D) g;
+        g2d.drawImage(background, backgroundx, 0, null);
+        g2d.drawImage(background, backgroundx2, 0, null);
         g2d.drawImage(player,(int)player_X,(int)player_Y,null);
+        
+
     }
     public void update(){
         if (player_Y >= HEIGHT - player_Height) {
@@ -38,7 +45,16 @@ public class GamePanel extends JPanel implements Runnable{
             player_Y += velocity;
             velocity += gravity;
         }
-        
+
+        backgroundx -= 2;
+        backgroundx2 -= 2;
+        if (backgroundx <= -1066) {
+            backgroundx = 1066;
+        }
+        if (backgroundx2 <= -1066) {
+            backgroundx2 = 1066;
+        }
+
     }
 
     @Override
