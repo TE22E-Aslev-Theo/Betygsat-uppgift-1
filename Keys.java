@@ -13,7 +13,6 @@ public class Keys implements KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
         char keycode = e.getKeyChar();
-
         if (keycode == KeyEvent.VK_SPACE) {
             jump = true;
         }
@@ -22,7 +21,6 @@ public class Keys implements KeyListener{
     @Override
     public void keyReleased(KeyEvent e) {
         char keycode = e.getKeyChar();
-
         if (keycode == KeyEvent.VK_SPACE) {
             jump = false;
         }
