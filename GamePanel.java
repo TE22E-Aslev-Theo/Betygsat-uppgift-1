@@ -1,6 +1,7 @@
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import java.awt.*;
+import java.util.concurrent.ThreadLocalRandom;
 public class GamePanel extends JPanel implements Runnable{
     
     final int WIDTH = 1066;
@@ -9,10 +10,15 @@ public class GamePanel extends JPanel implements Runnable{
     public double player_Y;
     final double player_Width = 70;
     final double player_Height = 35;
-    public double gravity = 0.2;
+    public double gravity = 0.4;
     public double velocity; 
     public int backgroundx = 0;
     public int backgroundx2 = 1066;
+    public int[] rör_x = {700,1100,1500};
+    public int[] rör_y = {
+        ThreadLocalRandom.current().nextInt(-400,-100),
+        ThreadLocalRandom.current().nextInt(-400,-100),
+        ThreadLocalRandom.current().nextInt(-400,-100)};
     Thread GameThread;
     public Keys keylistener;
     GamePanel(){
@@ -32,10 +38,15 @@ public class GamePanel extends JPanel implements Runnable{
         super.paint(g);
         Image player = new ImageIcon("Flappy birb.png").getImage();
         Image background = new ImageIcon("spelbakgrund.jpg").getImage();
+        Image rör = new ImageIcon("rörbild.png").getImage();
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(background, backgroundx, 0, null);
         g2d.drawImage(background, backgroundx2, 0, null);
         g2d.drawImage(player,(int)player_X,(int)player_Y,null);
+        g2d.drawImage(rör,rör_x[0],rör_y[0],null);
+        g2d.drawImage(rör,rör_x[1],rör_y[1],null);
+        g2d.drawImage(rör,rör_x[2],rör_y[2],null);
+        
     }
 
     public void jump(){
@@ -44,6 +55,15 @@ public class GamePanel extends JPanel implements Runnable{
             velocity= -7;
             keylistener.jump = false;
         } 
+
+    }
+
+    public void rörreset(int arraynumber){
+
+        if (rör_x[arraynumber] < -120) {
+            rör_x[arraynumber] = 1066;
+            rör_y[arraynumber] = ThreadLocalRandom.current().nextInt(-400,-100);
+        }
 
     }
 
@@ -65,6 +85,14 @@ public class GamePanel extends JPanel implements Runnable{
             backgroundx2 = 1066;
         }
         jump();
+        rör_x[0]-=6;
+        rör_x[1]-=6;
+        rör_x[2]-=6;
+        
+        rörreset(0);
+        rörreset(1);
+        rörreset(2);
+        
 
     }
 
