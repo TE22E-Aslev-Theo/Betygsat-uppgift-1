@@ -14,8 +14,9 @@ public class GamePanel extends JPanel implements Runnable{
     public int backgroundx = 0;
     public int backgroundx2 = 1066;
     Thread GameThread;
+    public Keys keylistener;
     GamePanel(){
-        Keys keylistener = new Keys();
+        keylistener = new Keys();
         this.setDoubleBuffered(true);
         this.setPreferredSize(new Dimension(WIDTH,HEIGHT));
         this.setFocusable(true);
@@ -35,11 +36,19 @@ public class GamePanel extends JPanel implements Runnable{
         g2d.drawImage(background, backgroundx, 0, null);
         g2d.drawImage(background, backgroundx2, 0, null);
         g2d.drawImage(player,(int)player_X,(int)player_Y,null);
-        
+    }
+
+    public void jump(){
+
+        if (keylistener.jump == true) {
+            velocity= -13;
+            keylistener.jump = false;
+        } 
 
     }
+
     public void update(){
-        if (player_Y >= HEIGHT - player_Height) {
+        if (player_Y >= HEIGHT - player_Height - 72) {
             velocity = 0;
         } else{
             player_Y += velocity;
@@ -54,6 +63,7 @@ public class GamePanel extends JPanel implements Runnable{
         if (backgroundx2 <= -1066) {
             backgroundx2 = 1066;
         }
+        jump();
 
     }
 
