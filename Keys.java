@@ -4,7 +4,7 @@ import java.awt.event.KeyListener;
 public class Keys implements KeyListener{
 
     public boolean jump; 
-
+    public boolean jumped = true;
     @Override
     public void keyTyped(KeyEvent e) {
         //används inte 
@@ -13,8 +13,9 @@ public class Keys implements KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
         char keycode = e.getKeyChar();
-        if (keycode == KeyEvent.VK_SPACE) {
+        if (keycode == KeyEvent.VK_SPACE && jumped == true) {
             jump = true;
+            jumped = false;
         }
     }
 
@@ -23,6 +24,7 @@ public class Keys implements KeyListener{
         char keycode = e.getKeyChar();
         if (keycode == KeyEvent.VK_SPACE) {
             jump = false;
+            jumped = true;
         }
     }
 

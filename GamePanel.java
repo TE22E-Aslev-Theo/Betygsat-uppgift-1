@@ -5,11 +5,11 @@ public class GamePanel extends JPanel implements Runnable{
     
     final int WIDTH = 1066;
     final int HEIGHT = 600;
-    public double player_X;
+    public double player_X = 100;
     public double player_Y;
     final double player_Width = 70;
     final double player_Height = 35;
-    public double gravity = 0.4;
+    public double gravity = 0.2;
     public double velocity; 
     public int backgroundx = 0;
     public int backgroundx2 = 1066;
@@ -41,22 +41,23 @@ public class GamePanel extends JPanel implements Runnable{
     public void jump(){
 
         if (keylistener.jump == true) {
-            velocity= -13;
+            velocity= -7;
             keylistener.jump = false;
         } 
 
     }
 
     public void update(){
-        if (player_Y >= HEIGHT - player_Height - 72) {
+        if (player_Y >= HEIGHT - player_Height - 60) {
             velocity = 0;
         } else{
             player_Y += velocity;
             velocity += gravity;
+            backgroundx -= 2;
+            backgroundx2 -= 2;
         }
 
-        backgroundx -= 2;
-        backgroundx2 -= 2;
+        
         if (backgroundx <= -1066) {
             backgroundx = 1066;
         }
