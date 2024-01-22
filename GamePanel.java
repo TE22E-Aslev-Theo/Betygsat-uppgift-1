@@ -1,10 +1,14 @@
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import java.awt.*;
 public class GamePanel extends JPanel implements Runnable{
     
     final int WIDTH = 1066;
     final int HEIGHT = 600;
-
+    public double player_X;
+    public double player_Y;
+    final double player_Width = 70;
+    final double player_Height = 35;
     Thread GameThread;
     GamePanel(){
         Keys keylistener = new Keys();
@@ -21,7 +25,9 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void paint(Graphics g){
         super.paint(g);
-
+        Image player = new ImageIcon("Flappy birb.png").getImage();
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.drawImage(player,(int)player_X,(int)player_Y,null);
     }
     public void update(){
 
@@ -40,7 +46,5 @@ public class GamePanel extends JPanel implements Runnable{
                 e.printStackTrace();
             }
         } 
-
     }
-
 }
