@@ -8,10 +8,10 @@ public class Main extends JFrame{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("drib yppalf ");
         frame.setResizable(false);
+        frame.add(gamepanel.startbutton);
         frame.add(gamepanel);
         frame.pack(); 
-        gamepanel.StartGame();
         frame.setVisible(true);
-        frame.add(gamepanel.pointcounter);
+        
     }
 }
