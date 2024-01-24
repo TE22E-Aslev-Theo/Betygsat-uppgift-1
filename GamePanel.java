@@ -25,6 +25,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
     public int poäng;
     public boolean[] harpasserat = {false,false,false};
     JLabel pointcounter; 
+    public boolean start = false;
     public int[] rör_y = {
         ThreadLocalRandom.current().nextInt(-350,-150),
         ThreadLocalRandom.current().nextInt(-350,-150),
@@ -53,6 +54,18 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
         GameThread = new Thread(this);
         GameThread.start();
     }
+    public void Lose(){
+        rör_x[0] = 1500; 
+        rör_x[1] = 1900;
+        rör_x[2] = 2300;
+        player_Y = 300;
+        player_X = -100;
+        poängräknarey = -100;
+        poäng = 0;
+        GameThread = null;
+        startbutton.setVisible(true);
+    }
+
     public void paint(Graphics g){
         super.paint(g);
         Image player = new ImageIcon("Flappy birb.png").getImage();
@@ -77,15 +90,15 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
         g2d.setFont(stringFont);
         g2d.drawString(String.valueOf(poäng),((int)poängräknare.getX())+ 50,((int)poängräknare.getY()) + 10 );
         if(övrerör1.intersects(fågel) || nedrerör1.intersects(fågel)){
-            GameThread = null;
-            
+            Lose();
+           
         }
         if(övrerör2.intersects(fågel) || nedrerör2.intersects(fågel)){
-            GameThread = null;
-            
+            Lose();
+           
         }
         if(övrerör3.intersects(fågel) || nedrerör3.intersects(fågel)){
-            GameThread = null;
+            Lose();
             
         }     
     }
@@ -109,11 +122,11 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
         }
     }
     public void update(){
-        if (poängräknarey <= 50) {
+        if (poängräknarey <= 50 && start) {
             poängräknarey += 4;
         }
         if (player_Y >= HEIGHT - player_Height - 60) {
-            velocity = 0;
+            Lose();
         } else{
             player_Y += velocity;
             velocity += gravity;
@@ -147,16 +160,19 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        } 
+        }  
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-      
-        if (e.getSource() == startbutton) {
+        if (GameThread == null) {
+            if (e.getSource() == startbutton) {
             StartGame();
             startbutton.setVisible(false);
             player_X = 150;
+            start = true;
+            }
         }
+        
        
     }
 }
