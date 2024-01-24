@@ -9,9 +9,9 @@ public class Main extends JFrame{
         frame.setTitle("drib yppalf ");
         frame.setResizable(false);
         frame.add(gamepanel);
-        frame.pack();
+        frame.pack(); 
         gamepanel.StartGame();
         frame.setVisible(true);
-        
+        frame.add(gamepanel.pointcounter);
     }
 }

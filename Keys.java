@@ -5,6 +5,7 @@ public class Keys implements KeyListener{
 
     public boolean jump; 
     public boolean jumped = true;
+    
     @Override
     public void keyTyped(KeyEvent e) {
         //används inte 
@@ -16,6 +17,7 @@ public class Keys implements KeyListener{
         if (keycode == KeyEvent.VK_SPACE && jumped == true) {
             jump = true;
             jumped = false;
+            
         }
     }
 
