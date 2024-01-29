@@ -1,5 +1,4 @@
 import javax.swing.JFrame;
-
 public class Main extends JFrame{
     public static void main(String[] args) {
         GamePanel gamepanel = new GamePanel();
@@ -7,9 +6,16 @@ public class Main extends JFrame{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("drib yppalf ");
         frame.setResizable(false);
+        
+        frame.add(gamepanel.modebutton);
         frame.add(gamepanel.startbutton);
+        frame.add(gamepanel.highscoretable);
         frame.add(gamepanel);
         frame.pack(); 
         frame.setVisible(true);
+        
     }
+
+    
+    
 }
