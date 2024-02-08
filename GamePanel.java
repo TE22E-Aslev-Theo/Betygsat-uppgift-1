@@ -1,16 +1,12 @@
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
-import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 public class GamePanel extends JPanel implements Runnable, ActionListener{
+    public String name;
     final int WIDTH = 1066;
     final int HEIGHT = 600;
     public double player_X = -100;
@@ -20,16 +16,17 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
     int poängräknarey = -100;
     public double gravity = 0.6;
     public double velocity; 
+    public double rörvelocity;
     public JButton startbutton = new JButton("Start");
-    public JButton modebutton = new JButton("Easy");
-    public JLabel highscoretable = new JLabel();
-    public int antalhighscore;
+    public JButton modebutton1 = new JButton("Easy");
+    public JButton modebutton2 = new JButton("Medium");
+    public JButton modebutton3 = new JButton("Hard");
+    public int molnfart;
     public int backgroundx = 0;
     public int backgroundx2 = 1066;
     public int[] rör_x = {1500,1900,2300};
     public int poäng;
     public boolean[] harpasserat = {false,false,false};
-    JLabel pointcounter; 
     public boolean start = false;
     public int[] rör_y = {
         ThreadLocalRandom.current().nextInt(-350,-150),
@@ -38,46 +35,90 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
     };
     Thread GameThread;
     public Keys keylistener;
-    HashMap<String,String> Highscore;
+    public int[] Highscore = {0,0,0,0,0,0,0,0,0,0};
+    public JTextField Highscorenumber[] = {null,null,null,null,null,null,null,null,null,null};
+
 
     GamePanel(){
+        
+        for (int i = 0; i < Highscorenumber.length; i++) {
+            Highscorenumber[i] = new JTextField();
+            Highscorenumber[i].setText((i+1) +". " + Highscore[i]);
+            Highscorenumber[i].setEditable(false);
+            Highscorenumber[i].setBounds(850,20 + (i*50), 200,50 );
+            Highscorenumber[i].setVisible(true);
+        }
+        
         keylistener = new Keys();
-        Highscore = new HashMap<>();
         startbutton.setBounds(0, 50, 150, 50);
         startbutton.setBackground(Color.WHITE);
         startbutton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         startbutton.setOpaque(true);
         startbutton.setVisible(true);
         startbutton.addActionListener(this);
-        highscoretable = new JLabel();
-        highscoretable.setBounds(750,50,300,450);
-        highscoretable.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        highscoretable.setVisible(true);
-        highscoretable.setOpaque(true);
-        modebutton.setBounds(0, 400, 150, 50);
-        modebutton.setBackground(Color.WHITE);
-        modebutton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        modebutton.setOpaque(true);
-        modebutton.setVisible(false);
-        modebutton.addActionListener(this);
+        modebutton3.setBounds(0, 500, 150, 50);
+        modebutton3.setBackground(Color.WHITE);
+        modebutton3.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        modebutton3.setOpaque(true);
+        modebutton3.setVisible(false);
+        modebutton3.addActionListener(this);
+        modebutton2.setBounds(0, 450, 150, 50);
+        modebutton2.setBackground(Color.WHITE);
+        modebutton2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        modebutton2.setOpaque(true);
+        modebutton2.setVisible(false);
+        modebutton2.addActionListener(this);
+        modebutton1.setBounds(0, 400, 150, 50);
+        modebutton1.setBackground(Color.WHITE);
+        modebutton1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        modebutton1.setOpaque(true);
+        modebutton1.setVisible(false);
+        modebutton1.addActionListener(this);
+        
         this.setDoubleBuffered(true);
         this.setPreferredSize(new Dimension(WIDTH,HEIGHT));
         this.setFocusable(true);
         this.addKeyListener(keylistener);
         
     }
-
+    
     public void StartGame(){
         GameThread = new Thread(this);
         GameThread.start();
     }
+    public void Highscore_comparer(){
+
+        if (Highscore[9] <= poäng){
+            Highscore[9] = poäng;
+        }
+    }
+    public void sortHighscore(){
+        for(int i = 0; i<Highscore.length-1; i++ ){
+            for(int j = 0; j <Highscore.length-1; j++){
+                if (Highscore[j] < Highscore[j+1]) {
+                    int k = Highscore[j];
+                    Highscore[j] = Highscore[j + 1];
+                    Highscore[j+1] = k;
+                }
+            }
+        } 
+    }
     
     public void Lose(){
+        harpasserat[0] = false;
+        harpasserat[1] = false;
+        harpasserat[2] = false;
         rör_x[0] = 1500; 
         rör_x[1] = 1900;
         rör_x[2] = 2300;
         player_Y = 300;
         player_X = -100;
+        sortHighscore();
+        Highscore_comparer();
+        sortHighscore();
+        for (int i = 0; i < Highscore.length; i++) {
+            Highscorenumber[i].setText((i+1) +". " + Highscore[i]);
+        }
         poängräknarey = -100;
         poäng = 0;
         velocity = 0;
@@ -88,6 +129,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
     }
 
     public void paint(Graphics g){
+
         super.paint(g);
         Image player = new ImageIcon("Flappy birb.png").getImage();
         Image background = new ImageIcon("spelbakgrund.jpg").getImage();
@@ -111,20 +153,14 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
         g2d.setFont(stringFont);
         g2d.drawString(String.valueOf(poäng),((int)poängräknare.getX())+ 50,((int)poängräknare.getY()) + 10 );
         if(övrerör1.intersects(fågel) || nedrerör1.intersects(fågel)){
-            
             Lose();
-           
         }
         if(övrerör2.intersects(fågel) || nedrerör2.intersects(fågel)){
-            
             Lose();
-           
         }
         if(övrerör3.intersects(fågel) || nedrerör3.intersects(fågel)){
-            
             Lose();
-            
-        }     
+        }    
     }
     public void jump(){
         
@@ -159,16 +195,15 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
             poängräknarey += 4;
         }
         if (player_Y >= HEIGHT - player_Height - 60) {
-            
             Lose();
         } else{
             player_Y += velocity;
             velocity += gravity;
-            backgroundx -= 2;
-            backgroundx2 -= 2;
-            rör_x[0]-=(poäng/20) + 7;
-            rör_x[1]-=(poäng/20) + 7;
-            rör_x[2]-=(poäng/20) + 7;
+            backgroundx -= molnfart;
+            backgroundx2 -= molnfart;
+            rör_x[0]-=(poäng/20) + rörvelocity;
+            rör_x[1]-=(poäng/20) + rörvelocity;
+            rör_x[2]-=(poäng/20) + rörvelocity;
         }
         if (backgroundx <= -1066) {
             backgroundx = 1066;
@@ -200,27 +235,65 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
     public void actionPerformed(ActionEvent e) {
         
         if (GameThread == null) {
-            reset();
-            highscoretable.setVisible(true);
-            if (e.getSource() == startbutton) {
-                startbutton.setVisible(false);    
-                modebutton.setVisible(true);
-            } 
-            if (!startbutton.isVisible()) {
-               if (e.getSource() == modebutton) {
-                modebutton.setVisible(false);
-                StartGame();
-                player_X = 150;
-                start = true;
-                reset();
-            } 
+            
+            for (int i = 0; i < Highscorenumber.length; i++) {
+                Highscorenumber[i].setVisible(true);
             }
             
-        }
-        else{
-            highscoretable.setVisible(false);
-        }
-        
-       
+            reset();
+            if (e.getSource() == startbutton) {
+                startbutton.setVisible(false);    
+                modebutton1.setVisible(true);
+                modebutton2.setVisible(true);
+                modebutton3.setVisible(true);
+            } 
+            if (!startbutton.isVisible()) {
+                if (e.getSource() == modebutton1) {
+                    modebutton3.setVisible(false);
+                    modebutton2.setVisible(false);
+                    modebutton1.setVisible(false);
+                    
+                    for (int i = 0; i < Highscorenumber.length; i++) {
+                        Highscorenumber[i].setVisible(true);
+                    }
+                    StartGame();
+                    player_X = 150;
+                    start = true;
+                    reset();
+                    rörvelocity = 7;
+                    molnfart = 2;
+                }
+                if (e.getSource() == modebutton2) {
+                    modebutton3.setVisible(false);
+                    modebutton2.setVisible(false);
+                    modebutton1.setVisible(false);
+                   
+                    for (int i = 0; i < Highscorenumber.length; i++) {
+                        Highscorenumber[i].setVisible(true);
+                    }
+                    StartGame();
+                    player_X = 150;
+                    start = true;
+                    reset();
+                    rörvelocity = 10;
+                    molnfart = 3;
+                } 
+                if (e.getSource() == modebutton3) {
+                    modebutton3.setVisible(false);
+                    modebutton2.setVisible(false);
+                    modebutton1.setVisible(false);
+                    
+                    for (int i = 0; i < Highscorenumber.length; i++) {
+                        Highscorenumber[i].setVisible(true);
+                    }
+                    StartGame();
+                    player_X = 150;
+                    start = true;
+                    reset();
+                    rörvelocity = 15;
+                    molnfart = 4;
+                } 
+            }
+        } 
     }
 }
