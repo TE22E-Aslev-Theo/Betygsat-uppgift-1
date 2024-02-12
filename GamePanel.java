@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
 import java.util.concurrent.ThreadLocalRandom;
 public class GamePanel extends JPanel implements Runnable, ActionListener{
+    public boolean exit = false;
     public String name;
     final int WIDTH = 1066;
     final int HEIGHT = 600;
@@ -21,6 +22,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
     public JButton modebutton1 = new JButton("Easy");
     public JButton modebutton2 = new JButton("Medium");
     public JButton modebutton3 = new JButton("Hard");
+    public JButton exitButton = new JButton("Exit");
     public int molnfart;
     public int backgroundx = 0;
     public int backgroundx2 = 1066;
@@ -35,20 +37,17 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
     };
     Thread GameThread;
     public Keys keylistener;
-    public int[] Highscore = {0,0,0,0,0,0,0,0,0,0};
     public JTextField Highscorenumber[] = {null,null,null,null,null,null,null,null,null,null};
-
+    public int Highscore[] = {0,0,0,0,0,0,0,0,0,0};
 
     GamePanel(){
-        
-        for (int i = 0; i < Highscorenumber.length; i++) {
+        for (int i = 0; i < Highscore.length; i++) {
             Highscorenumber[i] = new JTextField();
             Highscorenumber[i].setText((i+1) +". " + Highscore[i]);
             Highscorenumber[i].setEditable(false);
             Highscorenumber[i].setBounds(850,20 + (i*50), 200,50 );
             Highscorenumber[i].setVisible(true);
         }
-        
         keylistener = new Keys();
         startbutton.setBounds(0, 50, 150, 50);
         startbutton.setBackground(Color.WHITE);
@@ -56,6 +55,12 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
         startbutton.setOpaque(true);
         startbutton.setVisible(true);
         startbutton.addActionListener(this);
+        exitButton.setBounds(0, 500, 150, 50);
+        exitButton.setBackground(Color.WHITE);
+        exitButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        exitButton.setOpaque(true);
+        exitButton.setVisible(true);
+        exitButton.addActionListener(this);
         modebutton3.setBounds(0, 500, 150, 50);
         modebutton3.setBackground(Color.WHITE);
         modebutton3.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -239,8 +244,11 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
             for (int i = 0; i < Highscorenumber.length; i++) {
                 Highscorenumber[i].setVisible(true);
             }
-            
             reset();
+
+            if (e.getSource() == exitButton){
+                System.exit(0);
+            }
             if (e.getSource() == startbutton) {
                 startbutton.setVisible(false);    
                 modebutton1.setVisible(true);
