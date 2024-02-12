@@ -39,6 +39,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
     public Keys keylistener;
     public JTextField Highscorenumber[] = {null,null,null,null,null,null,null,null,null,null};
     public int Highscore[] = {0,0,0,0,0,0,0,0,0,0};
+    public mouselistener mouselistener = new mouselistener();
 
     GamePanel(){
         for (int i = 0; i < Highscore.length; i++) {
@@ -84,7 +85,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
         this.setPreferredSize(new Dimension(WIDTH,HEIGHT));
         this.setFocusable(true);
         this.addKeyListener(keylistener);
-        
+        this.addMouseListener(mouselistener);
     }
     
     public void StartGame(){
@@ -169,9 +170,10 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
     }
     public void jump(){
         
-        if (keylistener.jump == true) {
+        if (keylistener.jump == true || mouselistener.jump == true) {
             velocity= -8;
             keylistener.jump = false;
+            mouselistener.jump = false;
         } 
     }
     public void poäng(int i){
